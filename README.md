@@ -6,7 +6,12 @@ Cumulus Linux is Linux so Ansible works right out of the box.  However Cumulus N
 
 ## OVERVIEW OF MODULES
 - cl_img_install — Install a different version of Cumulus Linux in the inactive slot.
-- cl_interface — Configures a front panel, bridge or bond interface on a Cumulus Linux switch.
+- cl_interface — Configures a front panel, loopback, mgmt, and L3 subinterfaces.
+- cl_bridge - Configures a bridge interface on a Cumulus Linux switch.
+- cl_bond - Configures a bond interface on a Cumulus Linux switch
+- cl_ports - Configure Cumulus Linux switch port attributes defined in
+  /etc/cumulus/ports.conf
+- cl_interface_policy -  Configure interface enforcement policy on Cumulus Linux
 - cl_license — Install a Cumulus Linux license.
 - cl_prefix_check - Check to see if a route exists.
 - cl_quagga_ospf - Configures basic OSPFv2 global parameters and OSPFv2 interface configuration.
