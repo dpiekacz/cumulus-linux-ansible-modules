@@ -42,6 +42,9 @@ interfaces.
         description:
             - set speed of the swp(front panel) or \
 management(eth0) interface. speed is in MB
+    autoneg:
+        description:
+            - set auto-negotiation of the port
     mtu:
         description:
             - set MTU. Configure Jumbo Frame by setting MTU to 9000.
@@ -125,7 +128,8 @@ cl_interface:
   ipv6: "{{ item.value.ipv6|default(omit) }}"
   alias_name: "{{ item.value.alias_name|default(omit) }}"
   addr_method: "{{ item.value.addr_method|default(omit) }}"
-  speed: "{{ item.value.link_speed|default(omit) }}"
+  speed: "{{ item.value.speed|default(omit) }}"
+  autoneg: "{{ item.value.autoneg|default(omit) }}"
   mtu: "{{ item.value.mtu|default(omit) }}"
   clagd_enable: "{{ item.value.clagd_enable|default(omit) }}"
   clagd_peer_ip: "{{ item.value.clagd_peer_ip|default(omit) }}"
@@ -206,9 +210,9 @@ def build_address(module):
         _addresslist += _ipv4
     if _ipv6 and len(_ipv6) > 0:
         _addresslist += _ipv6
+
     if len(_addresslist) > 0:
-        module.custom_desired_config['config']['address'] = ' '.join(
-            _addresslist)
+        module.custom_desired_config['config']['address'] = ' \n	address '.join(_addresslist)
 
 
 def build_vids(module):
@@ -225,6 +229,11 @@ def build_pvid(module):
 
 def build_speed(module):
     _speed = module.params.get('speed')
+    _autoneg = module.params.get('autoneg')
+
+    if _autoneg:
+        module.custom_desired_config['config']['link-autoneg'] = str(_autoneg)
+
     if _speed:
         module.custom_desired_config['config']['link-speed'] = str(_speed)
         module.custom_desired_config['config']['link-duplex'] = 'full'
@@ -352,6 +361,7 @@ def main():
             addr_method=dict(type='str',
                              choices=['', 'loopback', 'dhcp']),
             speed=dict(type='str'),
+            autoneg=dict(type='str'),
             mtu=dict(type='str'),
             virtual_ip=dict(type='str'),
             virtual_mac=dict(type='str'),
